@@ -1,0 +1,10 @@
+node_modules/
+dist/
+素材原始备份/
+*.output
+.env
+.env.local
+.env.*.local
+.netlify/
+*.log
+.DS_Store

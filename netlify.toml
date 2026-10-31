@@ -1,0 +1,28 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+  [build.environment]
+    NODE_VERSION = "20"
+
+# ---- 实验数据 API 分流：前端请求 /api/* ，重写到对应的 Netlify Function（同源，无需跨域配置） ----
+[[redirects]]
+  from = "/api/collect"
+  to = "/.netlify/functions/collect"
+  status = 200
+
+[[redirects]]
+  from = "/api/export"
+  to = "/.netlify/functions/export"
+  status = 200
+
+# SPA 兜底
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# ---- 上线前需在 Netlify 后台配置的环境变量 ----
+# EXPORT_TOKEN          导出端点鉴权 token（不配置则导出接口无鉴权，强烈建议配置）
+# VITE_VIDEO_URL        观察视频的可访问 URL（默认打包为 /sample.mp4，放 public/ 下）
