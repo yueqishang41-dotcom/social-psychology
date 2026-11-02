@@ -19,9 +19,10 @@ const initialState = {
   },
   blame: { responses: {}, startedAt: null, endedAt: null },       // { q1..q6: 1-7 }
   political: { responses: {}, startedAt: null, endedAt: null },   // { p1..p6: 1-7 }
+  attention: { blame: null, poly: null },                         // 注意力检查题作答（独立于量表分）
   demographics: {
-    name: '', studentId: '', phone: '', age: '', gender: '',
-    grade: '', ethnicity: '', nativeLang: '', chineseProf: null, priorExp: '',
+    name: '', phone: '', age: '', gender: '',
+    ethnicity: '', nativeLang: '', priorExp: '',
   },
   blurEvents: [],                               // [{ leftAt, returnedAt, durationMs, step }]
   behavioralLogs: [],
@@ -37,6 +38,7 @@ export const ACTIONS = {
   VIDEO_END: 'VIDEO_END',
   UPDATE_BLAME: 'UPDATE_BLAME',
   UPDATE_POLITICAL: 'UPDATE_POLITICAL',
+  UPDATE_ATTENTION: 'UPDATE_ATTENTION',
   UPDATE_DEMO: 'UPDATE_DEMO',
   FINISH: 'FINISH',
   ADD_BLUR_EVENT: 'ADD_BLUR_EVENT',
@@ -135,6 +137,10 @@ function testReducer(state, action) {
     case ACTIONS.UPDATE_POLITICAL:
       return { ...state, political: { ...state.political, responses: { ...state.political.responses, [action.payload.q]: action.payload.value } } };
 
+    // 注意力检查题：section = 'blame' | 'poly'
+    case ACTIONS.UPDATE_ATTENTION:
+      return { ...state, attention: { ...state.attention, [action.payload.section]: action.payload.value } };
+
     case ACTIONS.UPDATE_DEMO:
       return { ...state, demographics: { ...state.demographics, [action.payload.field]: action.payload.value } };
 
@@ -177,8 +183,20 @@ function testReducer(state, action) {
 const TestContext = createContext(null);
 const TestDispatchContext = createContext(null);
 
+/** 兼容旧版本 localStorage 快照：补齐缺失的新字段 */
+function sanitizeSaved(saved) {
+  if (!saved) return null;
+  return {
+    ...initialState,
+    ...saved,
+    attention: saved.attention || initialState.attention,
+    demographics: { ...initialState.demographics, ...(saved.demographics || {}) },
+    video: { ...initialState.video, ...(saved.video || {}) },
+  };
+}
+
 export function TestProvider({ children }) {
-  const savedState = loadState();
+  const savedState = sanitizeSaved(loadState());
   const [state, dispatch] = useReducer(testReducer, savedState || initialState);
   const stateRef = useRef(state);
   stateRef.current = state;

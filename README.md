@@ -54,10 +54,14 @@ netlify dev                  # 前端 + functions 一起跑，/api/collect 直�
 /api/export?format=json&token=XXX     # 全量原始 JSON（含逐次按键/切屏日志）
 ```
 
-CSV 列：`subject_id, condition, consent_name, created_at, total_duration_sec,
-video_keypress_count, video_blur_count, blame_mean, blame_q1..q6, poly_mean, poly_q1..p6,
-demo_name, demo_student_id, demo_phone, demo_age, demo_gender, demo_grade,
-demo_ethnicity, demo_native_lang, demo_chinese_prof, demo_prior_exp`
+CSV 列（30 列）：`subject_id, condition, consent_name, created_at, total_duration_sec,
+video_keypress_count, video_blur_count, blame_mean, blame_q1..q6, attn_blame,
+poly_mean, poly_q1..q6, attn_poly,
+demo_name, demo_phone, demo_age, demo_gender, demo_ethnicity, demo_native_lang, demo_prior_exp`
+
+- `attn_blame` / `attn_poly`：两个量表各嵌 1 道注意力检查题（归责段要求选 2，政治段要求选 5），
+  不计入均分；作答不等于正确值即视为未认真作答，可作剔除依据。
+- 视频阶段含理解检查题（答对按键规则才允许开始播放），尝试次数记录在 JSON 的 behavioral_logs。
 
 ## 主试须知
 

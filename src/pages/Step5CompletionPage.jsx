@@ -61,7 +61,7 @@ export default function Step5CompletionPage() {
           {status === 'ok' && '实验数据已同步至研究服务器，感谢您的参与。'}
           {status === 'uploading' && '正在同步实验数据…'}
           {status === 'pending' && '网络暂不可用，数据已在本机暂存，联网打开本页面将自动完成同步，无需其他操作。'}
-          {status === 'failed' && '数据同步未完成，请告知主试，我们将在现场协助处理。'}
+          {status === 'failed' && '数据同步未完成，请在微信群里联系研究人员，我们将协助处理。'}
         </p>
       </div>
 

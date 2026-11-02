@@ -13,7 +13,7 @@ export const STEP_LABELS = {
   step5: { no: 5, total: 5, label: '完成' },
 };
 
-export default function PageShell({ step, children, wide = false }) {
+export default function PageShell({ step, children, wide = false, showRestHint = true }) {
   const meta = STEP_LABELS[step];
   return (
     <div className="min-h-screen flex flex-col items-center px-4 py-8">
@@ -35,7 +35,7 @@ export default function PageShell({ step, children, wide = false }) {
           {children}
         </main>
         <footer className="mt-4 text-center text-xs text-slate-400">
-          北京师范大学心理学部 · 如您希望暂停休息，请随时告知主试
+          {showRestHint ? '北京师范大学心理学部 · 如您希望暂停休息，请随时告知主试' : '北京师范大学心理学部'}
         </footer>
       </div>
     </div>

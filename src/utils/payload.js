@@ -3,7 +3,7 @@
  * 字段命名与导出宽表对齐：snake_case，含自动计算的归责均分/政治倾向均分。
  * 数据只进不收：被试浏览器绝不触发任何下载。
  */
-import { BLAME_ITEMS, POLITICAL_ITEMS } from '../data/content';
+import { BLAME_ITEMS, POLITICAL_ITEMS, BLAME_ATTENTION, POLITICAL_ATTENTION } from '../data/content';
 
 function meanOf(values) {
   const nums = values.filter((v) => typeof v === 'number' && Number.isFinite(v));
@@ -60,6 +60,14 @@ export function buildPayload(state) {
       keypress_count: s.videoKeypressCount,
       keypress_logs: state.video.keypressLogs,        // [{ timestamp, videoCurrentTime }]
       blur_count: s.videoBlurCount,
+    },
+
+    // 注意力检查题（独立记录，不计入任何均分；正确值 blame=2 / poly=5）
+    attention: {
+      blame: state.attention.blame ?? null,
+      blame_correct: BLAME_ATTENTION.correct,
+      poly: state.attention.poly ?? null,
+      poly_correct: POLITICAL_ATTENTION.correct,
     },
 
     blame_responses: blameResponses,                  // q1..q6（1-7）

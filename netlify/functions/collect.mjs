@@ -24,6 +24,9 @@ function isValidPayload(p) {
   const polyKeys = ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'];
   if (!nums(p.blame_responses, blameKeys)) return false;
   if (!nums(p.political_responses, polyKeys)) return false;
+  // 注意力检查题必须作答
+  const attn = p.attention || {};
+  if (typeof attn.blame !== 'number' || typeof attn.poly !== 'number') return false;
   return true;
 }
 

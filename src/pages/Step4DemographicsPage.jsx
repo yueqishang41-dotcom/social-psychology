@@ -4,7 +4,8 @@ import { GENDER_OPTIONS, NATIVE_LANG_OPTIONS, PRIOR_EXP_OPTIONS } from '../data/
 import { useTestState, useTestDispatch, ACTIONS } from '../store/testStore';
 
 /**
- * 阶段 4：人口统计学信息（必填校验）。
+ * 阶段 4：人口统计学信息（必填校验）。已按课题组要求精简：
+ * 不收集学号、年级、中文熟练程度；性别仅男/女。
  */
 export default function Step4DemographicsPage() {
   const state = useTestState();
@@ -16,15 +17,12 @@ export default function Step4DemographicsPage() {
 
   const validate = () => {
     if (!d.name.trim()) return '请填写姓名。';
-    if (!d.studentId.trim()) return '请填写学号。';
     if (!/^[\d+\-() ]{7,20}$/.test(d.phone.trim())) return '请填写有效的联系方式（手机号）。';
     const age = Number(d.age);
     if (!Number.isInteger(age) || age < 18 || age > 100) return '请填写有效年龄（本研究仅限18周岁及以上成年人参加）。';
     if (!d.gender) return '请选择性别。';
-    if (!d.grade.trim()) return '请填写年级。';
     if (!d.ethnicity.trim()) return '请填写民族。';
     if (!d.nativeLang) return '请选择母语。';
-    if (!d.chineseProf) return '请选择中文熟练程度。';
     if (!d.priorExp) return '请选择是否参加过类似实验。';
     return null;
   };
@@ -51,49 +49,24 @@ export default function Step4DemographicsPage() {
           <Field label="1. 姓名" required>
             <input className="ipt" value={d.name} onChange={(e) => set('name')(e.target.value)} />
           </Field>
-          <Field label="2. 学号" required>
-            <input className="ipt" value={d.studentId} onChange={(e) => set('studentId')(e.target.value)} />
-          </Field>
-          <Field label="3. 联系方式（手机号）" required>
+          <Field label="2. 联系方式（手机号）" required>
             <input className="ipt" inputMode="tel" value={d.phone} onChange={(e) => set('phone')(e.target.value)} />
-          </Field>
-          <Field label="4. 您的年龄" required>
-            <input className="ipt" inputMode="numeric" value={d.age} onChange={(e) => set('age')(e.target.value)} />
           </Field>
         </div>
 
-        <RadioField label="5. 您的性别" options={GENDER_OPTIONS} value={d.gender} onChange={set('gender')} />
-        <RadioField label="8. 您的母语" options={NATIVE_LANG_OPTIONS} value={d.nativeLang} onChange={set('nativeLang')} />
-
         <div className="grid grid-cols-2 gap-4">
-          <Field label="6. 您的年级（例如：大一、研一）" required>
-            <input className="ipt" placeholder="如：大一" value={d.grade} onChange={(e) => set('grade')(e.target.value)} />
+          <Field label="3. 您的年龄" required>
+            <input className="ipt" inputMode="numeric" value={d.age} onChange={(e) => set('age')(e.target.value)} />
           </Field>
-          <Field label="7. 您的民族" required>
+          <Field label="4. 您的民族" required>
             <input className="ipt" placeholder="如：汉族" value={d.ethnicity} onChange={(e) => set('ethnicity')(e.target.value)} />
           </Field>
         </div>
 
-        <Field label="9. 您的中文熟练程度（1＝非常不熟练，7＝非常熟练）" required>
-          <div className="flex items-stretch gap-1.5">
-            {[1, 2, 3, 4, 5, 6, 7].map((n) => (
-              <button
-                key={n}
-                type="button"
-                onClick={() => set('chineseProf')(n)}
-                className={`flex-1 h-11 rounded-lg border text-sm font-medium transition-all
-                  ${d.chineseProf === n
-                    ? 'bg-blue-600 text-white border-blue-600'
-                    : 'bg-white text-slate-600 border-slate-300 hover:border-blue-400'}`}
-              >
-                {n}
-              </button>
-            ))}
-          </div>
-        </Field>
-
+        <RadioField label="5. 您的性别" options={GENDER_OPTIONS} value={d.gender} onChange={set('gender')} />
+        <RadioField label="6. 您的母语" options={NATIVE_LANG_OPTIONS} value={d.nativeLang} onChange={set('nativeLang')} />
         <RadioField
-          label="10. 您此前是否参加过类似的动作观察或人际判断实验？"
+          label="7. 您此前是否参加过类似的动作观察或人际判断实验？"
           options={PRIOR_EXP_OPTIONS}
           value={d.priorExp}
           onChange={set('priorExp')}

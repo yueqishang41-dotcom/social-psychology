@@ -127,10 +127,10 @@ function mean(p, keys, field) {
 const HEADER = [
   'subject_id', 'condition', 'consent_name', 'created_at',
   'total_duration_sec', 'video_keypress_count', 'video_blur_count',
-  'blame_mean', ...BLAME_KEYS.map((k) => `blame_${k}`),
-  'poly_mean', ...POLY_COLS,
-  'demo_name', 'demo_student_id', 'demo_phone', 'demo_age', 'demo_gender',
-  'demo_grade', 'demo_ethnicity', 'demo_native_lang', 'demo_chinese_prof', 'demo_prior_exp',
+  'blame_mean', ...BLAME_KEYS.map((k) => `blame_${k}`), 'attn_blame',
+  'poly_mean', ...POLY_COLS, 'attn_poly',
+  'demo_name', 'demo_phone', 'demo_age', 'demo_gender',
+  'demo_ethnicity', 'demo_native_lang', 'demo_prior_exp',
 ];
 
 function buildWideCSV(payloads) {
@@ -150,11 +150,12 @@ function buildWideCSV(payloads) {
       numOr(typeof v.blur_count === 'number' ? v.blur_count : ''),
       mean(p, BLAME_KEYS, 'blame'),
       ...BLAME_KEYS.map((k) => numOr(b[k])),
+      numOr((p.attention || {}).blame),
       mean(p, POLY_KEYS, 'poly'),
       ...POLY_KEYS.map((k) => numOr(po[k])),
-      d.name ?? '', d.studentId ?? '', d.phone ?? '', d.age ?? '', d.gender ?? '',
-      d.grade ?? '', d.ethnicity ?? '', d.nativeLang ?? '',
-      numOr(d.chineseProf), d.priorExp ?? '',
+      numOr((p.attention || {}).poly),
+      d.name ?? '', d.phone ?? '', d.age ?? '', d.gender ?? '',
+      d.ethnicity ?? '', d.nativeLang ?? '', d.priorExp ?? '',
     ];
     lines.push(row.map(esc).join(','));
   }
